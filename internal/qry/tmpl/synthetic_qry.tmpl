@@ -1,0 +1,7 @@
+CREATE OR REPLACE TABLE {{ .Table.SchemaName }}.{{ .Table.TableName }} 
+    AS SELECT
+{{- $total_cols := len .Columns }}
+{{- range $i, $e := .Columns }}
+        {{ col_gen . }} AS {{ .Name }} {{- if not (last_idx $i $total_cols) -}},{{end}}
+{{- end}}
+    FROM TABLE(GENERATOR(rowcount => {{ .TotalRecords }}))

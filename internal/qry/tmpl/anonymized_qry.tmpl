@@ -1,0 +1,8 @@
+SET (passphrase) = (select randstr(normal(10, 15, random()), random()));
+CREATE OR REPLACE TABLE {{.DstTable.DatabaseName}}.{{.DstTable.SchemaName}}.{{.DstTable.TableName}}
+    AS SELECT
+{{- $total_cols := len .Columns }}
+{{- range $i, $e := .Columns }}
+        {{ col_gen . }} AS {{ .Name }} {{- if not (last_idx $i $total_cols) -}},{{end}}
+{{- end}}
+    FROM {{.SrcTable.DatabaseName}}.{{ .SrcTable.SchemaName }}.{{ .SrcTable.TableName }};
